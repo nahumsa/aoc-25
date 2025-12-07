@@ -12,47 +12,19 @@ fn check_duplicated(val: String) -> bool {
     let len = val.len() / 2;
     let left = &val[..len];
     let right = &val[len..];
-    right.contains(left) && len > 1
+    right == left
 }
 
 fn validate_invalid(min_val: String, max_val: String) -> i64 {
     let mut invalid_number = 0;
 
-    let len_min = min_val.len() / 2;
-    let left_min = &min_val[..len_min];
-    let right_min = &min_val[len_min..];
-
-    let len_max = max_val.len() / 2;
-    let left_max = &max_val[..len_max];
-
-    let duplicated_val_min = format!("{}{}", left_min, left_min);
-    dbg!("{:?}", left_min);
-    let duplicated_number_min: i64 = duplicated_val_min.parse().unwrap_or(0);
-
-    let duplicated_val_max = format!("{}{}", left_max, left_max);
-    let duplicated_number_max: i64 = duplicated_val_max.parse().unwrap_or(0);
-
     let max_number: i64 = max_val.parse().unwrap();
     let min_number: i64 = min_val.parse().unwrap();
-
-    dbg!("{}", duplicated_number_min);
-    dbg!("{}", duplicated_number_max);
-
-    if right_min == left_min {
-        invalid_number += min_number;
-    }
-
-    if min_number + max_number - duplicated_number_min < max_number
-        && !check_duplicated(String::from(left_min))
-    {
-        invalid_number += duplicated_number_min;
-    }
-
-    if min_number + max_number - duplicated_number_max < max_number
-        && !check_duplicated(String::from(left_max))
-        && duplicated_number_max != duplicated_number_min
-    {
-        invalid_number += duplicated_number_max;
+    for number in min_number..=max_number {
+        let str_number: String = number.to_string();
+        if check_duplicated(str_number) {
+            invalid_number += number
+        }
     }
 
     invalid_number
